@@ -1,6 +1,13 @@
 version: '3'
 services:
 
+  devcontainer:
+    image: mcr.microsoft.com/devcontainers/base:ubuntu
+    volumes:
+      - ../..:/workspaces:cached
+    network_mode: service:db
+    command: sleep infinity
+
   #PHP Service
   app:
     build:
