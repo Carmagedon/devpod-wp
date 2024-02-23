@@ -1,50 +1,16 @@
-FROM php:7.4-fpm
+FROM mcr.microsoft.com/devcontainers/php:1-${templateOption:imageVariant}
 
-# Copy composer.lock and composer.json
-#COPY composer.lock composer.json /var/www/
+# Install MariaDB client
+RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
+    && apt-get install -y mariadb-client \
+    && apt-get clean -y && rm -rf /var/lib/apt/lists/*
 
-# Set working directory
-WORKDIR /var/www
+# Install php-mysql driver
+RUN docker-php-ext-install mysqli pdo pdo_mysql
 
-# Install dependencies
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    libpng-dev \
-    libjpeg62-turbo-dev \
-    libfreetype6-dev \
-    locales \
-    zip \
-    jpegoptim optipng pngquant gifsicle \
-    vim \
-    unzip \
-    git \
-    curl \
-    libzip-dev
+# [Optional] Uncomment this section to install additional OS packages.
+# RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
+#     && apt-get -y install --no-install-recommends <your-package-list-here>
 
-# Clear cache
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*
-
-# Install extensions
-RUN docker-php-ext-install pdo_mysql zip exif pcntl
-#RUN docker-php-ext-configure gd --with-gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ --with-png-dir=/usr/include/
-#RUN docker-php-ext-install gd
-
-# Install composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-
-# Add user for laravel application
-RUN groupadd -g 1000 www
-RUN useradd -u 1000 -ms /bin/bash -g www www
-
-# Copy existing application directory contents
-COPY php /var/www
-
-# Copy existing application directory permissions
-COPY --chown=www:www php /var/www
-
-# Change current user to www
-USER www
-
-# Expose port 9000 and start php-fpm server
-EXPOSE 9000
-CMD ["php-fpm"]
+# [Optional] Uncomment this line to install global node packages.
+# RUN su vscode -c "source /usr/local/share/nvm/nvm.sh && npm install -g <your-package-here>" 2>&1
