@@ -8,6 +8,3 @@ tasks:
 ports:
   - port: 80
     onOpen: open-browser
-vscode:
-  extensions:
-    - ms-azuretools.vscode-docker
