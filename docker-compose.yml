@@ -1,6 +1,18 @@
 version: '3.8'
 
 services:
+
+  php-fpm:
+    build:
+      context: .
+      dockerfile: php/Dockerfile
+    container_name: php-fpm
+    restart: unless-stopped
+    tty: true
+    volumes:
+      - ./src:/var/www/html
+
+
   #Nginx Service
   webserver:
     image: nginx:alpine
@@ -11,14 +23,7 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ./:/var/www
-      - ./.devcontainer/nginx/:/etc/nginx/conf.d/
-    networks:
-      - app-network
-
-networks:
-  app-network:
-    driver: bridge
-
-volumes:
-  mariadb-data:
+      - ./src/:/var/www
+      - ./nginx:/etc/nginx/conf.d/
+    depends_on:
+      - php-fpm
