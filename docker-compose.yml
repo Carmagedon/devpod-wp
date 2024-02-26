@@ -10,7 +10,7 @@ services:
     restart: unless-stopped
     tty: true
     volumes:
-      - ./src:/var/www/html
+      - ./src:/var/www
 
 
   #Nginx Service
