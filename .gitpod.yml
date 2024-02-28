@@ -4,7 +4,6 @@ tasks:
   - command: |
       docker-compose up
 
-
 ports:
   - port: 80
     onOpen: open-browser
