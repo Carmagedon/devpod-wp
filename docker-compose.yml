@@ -9,7 +9,7 @@ services:
     restart: unless-stopped
     tty: true
     volumes:
-      - ./src:/var/www
+      - ./src:/var/www/html
 
   webserver:
     image: nginx:alpine
